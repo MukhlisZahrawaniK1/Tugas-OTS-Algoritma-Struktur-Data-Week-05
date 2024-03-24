@@ -1,0 +1,71 @@
+#include <stdio.h>
+
+// Struktur untuk tanggal
+struct Date {
+    int day;
+    int month;
+    int year;
+};
+
+// Fungsi untuk memeriksa apakah suatu tahun merupakan tahun kabisat
+int isKabisat(int year) {
+    if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+        return 1; // Tahun kabisat
+    } else {
+        return 0; // Bukan tahun kabisat
+    }
+}
+
+// Fungsi untuk mendapatkan jumlah hari dalam satu bulan
+int hariDalamBulan(int month, int year) {
+    if (month == 2) {
+        return (isKabisat(year) ? 29 : 28);
+    } else if (month == 4 || month == 6 || month == 9 || month == 11) {
+        return 30;
+    } else {
+        return 31;
+    }
+}
+
+// Fungsi untuk menambahkan satu hari ke tanggal
+void hariBerikutnya(struct Date *date) {
+    int daysInMonth = hariDalamBulan(date->month, date->year);
+    if (date->day < daysInMonth) {
+        (date->day)++;
+    } else {
+        date->day = 1;
+        if (date->month < 12) {
+            (date->month)++;
+        } else {
+            date->month = 1;
+            (date->year)++;
+        }
+    }
+}
+
+int main() {
+    struct Date currentDate;
+
+    printf("Masukkan tanggal (format dd/mm/yyyy): ");
+    scanf("%d/%d/%d", &currentDate.day, &currentDate.month, &currentDate.year);
+
+    // Validasi input tanggal
+    if (currentDate.day < 1 || currentDate.day > 31 || currentDate.month < 1 || currentDate.month > 12 || currentDate.year < 1) {
+        printf("Input tanggal tidak valid.\n");
+        return 1;
+    }
+
+    // Periksa apakah tanggal input valid untuk bulan dan tahun tersebut
+    if (currentDate.day > hariDalamBulan(currentDate.month, currentDate.year)) {
+        printf("Input tanggal tidak valid untuk bulan dan tahun tersebut.\n");
+        return 1;
+    }
+
+    // Hitung hari berikutnya
+    hariBerikutnya(&currentDate);
+
+    // Cetak hari berikutnya
+    printf("Tanggal selanjutnya: %d/%d/%d\n", currentDate.day, currentDate.month, currentDate.year);
+
+    return 0;
+}
